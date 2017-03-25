@@ -26,5 +26,6 @@ before_script:
 script:
 - ng test --watch false
 
-after_script:
+after_success:
+  # Send coverage data to Coveralls
   - cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
