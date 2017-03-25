@@ -23,6 +23,8 @@ before_script:
 - npm install
 - ng build
 
-script: 
+script:
 - ng test --watch false
-#karma start config/karma.conf.js --single-run
+
+after_script:
+  - cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
