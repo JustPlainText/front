@@ -3,9 +3,7 @@ dist: trusty
 language: node_js
 node_js:
 - '6.9'
-services:
-- docker
-addons:
+addons: 
 apt:
   sources:
   - google-chrome
@@ -13,7 +11,8 @@ apt:
   - google-chrome-stable
   - google-chrome-beta
 before_install:
-- openssl aes-256-cbc -K $encrypted_5c354d5aeeb4_key -iv $encrypted_5c354d5aeeb4_iv -in gce.json.enc -out gce.json -d
+- openssl aes-256-cbc -K $encrypted_8c4c93323157_key -iv $encrypted_8c4c93323157_iv
+  -in gce.json.enc -out gce.json -d
 - export CHROME_BIN=chromium-browser
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
@@ -23,12 +22,3 @@ before_script:
 - ng build
 script:
 - ng test --watch false
-after_success:
-- cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-deploy:
-  provider: gae
-  skip_cleanup: true
-  project: jpt-2-162623
-  keyfile: gce.json
-  verbosity: debug
-  on: develop
