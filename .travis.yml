@@ -3,7 +3,7 @@ dist: trusty
 language: node_js
 node_js:
 - '6.9'
-addons: 
+addons:
 apt:
   sources:
   - google-chrome
@@ -22,3 +22,14 @@ before_script:
 - ng build
 script:
 - ng test --watch false
+
+after_success:
+- cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
+deploy:
+  provider: gae
+  skip_cleanup: true
+  project: jpt-2-162623
+  keyfile: gce.json
+  verbosity: debug
+  on: develop
