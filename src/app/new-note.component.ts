@@ -1,5 +1,7 @@
 import { Component } from '@angular/core'
 import { Router }   from '@angular/router'
+import { UUID } from 'angular2-uuid';
+
 
 @Component({
     selector: 'new-note',
@@ -12,7 +14,8 @@ export class NewNoteComponent {
     constructor (private router : Router ) {}
 
     createNewNote(): void {
-        let link = ['/edit', this.noteTitle];
+        let uuid = UUID.UUID();
+        let link = ['/edit', this.noteTitle, uuid];
         this.router.navigate(link);
     }
 

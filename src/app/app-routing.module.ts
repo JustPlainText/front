@@ -6,7 +6,7 @@ import { EditNoteComponent }  from './edit-note.component';
 
 const routes: Routes = [
   { path: '', component: NewNoteComponent },
-  { path: 'edit/:id',  component: EditNoteComponent }
+  { path: 'edit/:title/:id',  component: EditNoteComponent }
 ];
 
 @NgModule({
