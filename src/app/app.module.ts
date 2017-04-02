@@ -5,9 +5,14 @@ import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 
+import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService }  from './in-memory-data.service';
+
 import { AppComponent } from './app.component';
 import { NewNoteComponent } from './new-note.component';
 import { EditNoteComponent } from './edit-note.component';
+import { NoteService } from './note.service';
+import { SimpleTimer } from "ng2-simple-timer"
 
 @NgModule({
   declarations: [
@@ -19,9 +24,10 @@ import { EditNoteComponent } from './edit-note.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    InMemoryWebApiModule.forRoot(InMemoryDataService)
   ],
-  providers: [Title],
+  providers: [Title, NoteService, SimpleTimer],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
