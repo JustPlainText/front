@@ -40,7 +40,7 @@ export class EditNoteComponent implements OnInit {
                   this.note = new Note("", "", "");
                 }
             });
-      this.timer.newTimer("saveCronJob", 10);
+      this.timer.newTimer("saveCronJob", 5);
       this.timer.subscribe("saveCronJob", e => this.saveNote());
     }
 
@@ -52,21 +52,26 @@ export class EditNoteComponent implements OnInit {
         this.noteChanged = true;
     }
 
+  public reload() {
+    var noteSource = Observable.fromPromise(this.noteService.getNote(this.note.id));
+    noteSource.subscribe(note => this.note = note[0]);
+  }
+
     private saveNote() {
         if (this.noteChanged) {
-            console.log("update note")
+          console.log("save "  + this.note.id);
+            this.noteService.update(this.note);
         }
         this.noteChanged = false;
     }
 
 
-
-    /*
+/*
     public encrypt(value) {
-        var encrypted = CryptoJS.AES.encrypt(this.text, this.id);
+        var encrypted = CryptoJS.AES.encrypt(this.note.text, this.note.id);
         console.log(encrypted.toString());
 
-        var decrypted = CryptoJS.AES.decrypt(encrypted, this.id);
+        var decrypted = CryptoJS.AES.decrypt(encrypted, this.note.id);
         console.log(decrypted.toString(CryptoJS.enc.Utf8));
     }
     */

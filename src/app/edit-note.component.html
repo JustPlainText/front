@@ -1,3 +1,5 @@
 <div>
+    <button (click)="reload()">reload</button>
+    <br/>
     <textarea autofocus [(ngModel)]="note.text" (keypress) = "onNoteChange($event)"></textarea>
 </div>
