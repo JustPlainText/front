@@ -31,7 +31,7 @@ export class EditNoteComponent implements OnInit {
       this.route.params
             .switchMap((params: Params) => this.noteService.getNote(params['id']))
             .subscribe(note => {
-                //TODO change it after introducing the real backend
+                //TODO change from array to single note after introducing the real backend
                 this.note = note[0];
                 if (this.note) {
                   this.setTitle(this.note.title)
@@ -52,10 +52,10 @@ export class EditNoteComponent implements OnInit {
         this.noteChanged = true;
     }
 
-  public reload() {
-    var noteSource = Observable.fromPromise(this.noteService.getNote(this.note.id));
-    noteSource.subscribe(note => this.note = note[0]);
-  }
+    //TODO change from array to single note after introducing the real backend
+    public reload() {
+        this.noteService.getNote(this.note.id).then(notes => this.note = notes[0]);
+      }
 
     private saveNote() {
         if (this.noteChanged) {
