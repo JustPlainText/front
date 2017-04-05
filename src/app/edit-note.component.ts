@@ -31,8 +31,7 @@ export class EditNoteComponent implements OnInit {
       this.route.params
             .switchMap((params: Params) => this.noteService.getNote(params['id']))
             .subscribe(note => {
-                //TODO change from array to single note after introducing the real backend
-                this.note = note[0];
+                this.note = note;
                 if (this.note) {
                   this.setTitle(this.note.title)
                 }

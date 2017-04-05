@@ -14,6 +14,8 @@ import { EditNoteComponent } from './edit-note.component';
 import { NoteService } from './note.service';
 import { SimpleTimer } from "ng2-simple-timer"
 
+import { environment } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,10 +27,9 @@ import { SimpleTimer } from "ng2-simple-timer"
     FormsModule,
     HttpModule,
     AppRoutingModule,
-    InMemoryWebApiModule.forRoot(InMemoryDataService)
+    environment.memDb ? InMemoryWebApiModule.forRoot(InMemoryDataService) : [],
   ],
   providers: [Title, NoteService, SimpleTimer],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
