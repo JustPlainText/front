@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "startf": "ng serve --environment=f",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

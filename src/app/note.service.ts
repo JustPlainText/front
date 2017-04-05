@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers} from "@angular/http";
+import {Http, Response, Headers} from "@angular/http";
 
 import {Note} from "./note";
 
@@ -14,7 +14,7 @@ export class NoteService {
 
     getNote (id: string): Promise<Note> {
         const url = `${this.serviceUrl}/${id}`;
-        return this.http.get(this.serviceUrl)
+        return this.http.get(url)
             .toPromise()
             .then(response => response.json().data as Note)
             .catch(this.handleError);
@@ -22,14 +22,14 @@ export class NoteService {
 
     create(note: Note): Promise<Note> {
         return this.http
-            .post(this.serviceUrl, JSON.stringify(note), {headers: this.headers})
+            .post(this.serviceUrl + "/create", JSON.stringify(note), {headers: this.headers})
             .toPromise()
             .then(res => res.json().data as Note)
             .catch(this.handleError);
     }
 
     update(note: Note): Promise<Note> {
-        const url = `${this.serviceUrl}/${note.id}`;
+        const url = `${this.serviceUrl}/update/${note.id}`;
         return this.http
             .put(url, JSON.stringify(note), {headers: this.headers})
             .toPromise()
