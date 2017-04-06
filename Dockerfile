@@ -1,10 +1,4 @@
-# The standard nginx container just runs nginx. The configuration file added
-# below will be used by nginx.
 FROM nginx
-
-# Copy the nginx configuration file. This sets up the behavior of nginx, most
-# importantly, it ensure nginx listens on port 8080. Google App Engine expects
-# the runtime to respond to HTTP requests at port 8080.
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy app
@@ -21,7 +15,3 @@ RUN mkdir -p /var/log/app_engine
 # to be explicit.
 RUN mkdir -p /usr/share/nginx/html/_ah && \
     echo "healthy" > /usr/share/nginx/html/_ah/health
-
-## Finally, all static assets.
-#ADD www/ /usr/share/nginx/
-#RUN chmod -R a+r /usr/share/nginx
