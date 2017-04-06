@@ -5,6 +5,8 @@ import {Note} from "./note";
 
 import 'rxjs/add/operator/toPromise';
 
+import { environment } from '../environments/environment';
+
 @Injectable()
 export class NoteService {
     private headers = new Headers({'Content-Type': 'application/json'});
@@ -21,7 +23,7 @@ export class NoteService {
     }
 
     private extractData(res: Response){
-      let note = res.json() as Note
+      let note = (environment.memDb ? res.json().data : res.json()) as Note
       return note;
     }
 
