@@ -16,20 +16,25 @@ export class NoteService {
         const url = `${this.serviceUrl}/${id}`;
         return this.http.get(url)
             .toPromise()
-            .then(response => response.json().data as Note)
+            .then(this.extractData)
             .catch(this.handleError);
+    }
+
+    private extractData(res: Response){
+      let note = res.json() as Note
+      return note;
     }
 
     create(note: Note): Promise<Note> {
         return this.http
-            .post(this.serviceUrl + "/create", JSON.stringify(note), {headers: this.headers})
+            .post(this.serviceUrl + "/", JSON.stringify(note), {headers: this.headers})
             .toPromise()
             .then(res => res.json().data as Note)
             .catch(this.handleError);
     }
 
     update(note: Note): Promise<Note> {
-        const url = `${this.serviceUrl}/update/${note.id}`;
+        const url = `${this.serviceUrl}/${note.id}`;
         return this.http
             .put(url, JSON.stringify(note), {headers: this.headers})
             .toPromise()

@@ -53,7 +53,7 @@ export class EditNoteComponent implements OnInit {
 
     //TODO change from array to single note after introducing the real backend
     public reload() {
-        this.noteService.getNote(this.note.id).then(notes => this.note = notes[0]);
+        this.noteService.getNote(this.note.id).then(notes => this.note = notes);
       }
 
     private saveNote() {
