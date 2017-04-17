@@ -25,7 +25,7 @@ export class NewNoteComponent {
 
   createNewNote(): void {
     if (this.password) {
-      this.note.password = true;
+      this.note.encrypted = true;
       this.passwordService.password = this.password;
     }
     let id = UUID.UUID();

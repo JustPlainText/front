@@ -19,7 +19,7 @@ export class EditNoteComponent implements AfterViewInit {
   note: Note = new Note();
   noteText: string = "";
   noteChanged: boolean;
-  noteSaved: boolean;
+  noteSaved: boolean = true;
   password: string;
   showSaveErrorMessage: boolean;
   showWrongPasswordMessage: boolean;
@@ -38,7 +38,7 @@ export class EditNoteComponent implements AfterViewInit {
           .switchMap((params: Params) => this.noteService.getNote(params['id']))
           .subscribe(note => {
             this.note = note;
-            this.noteText = this.note.text;
+            this.noteText = this.note.encrypted ? "" : this.note.text;
             this.setTitle(this.note.title);
             this.checkNotePassword();
           });
@@ -71,7 +71,7 @@ export class EditNoteComponent implements AfterViewInit {
   }
 
   private checkNotePassword() {
-    if (this.note.password) {
+    if (this.note.encrypted) {
       if (this.passwordService.password) {
         this.password = this.passwordService.password;
       }

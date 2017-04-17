@@ -1,6 +1,6 @@
 export class Note {
     title: string = "";
-    password: boolean;
+    encrypted: boolean;
     id: string;
     text: string = "";
 }
