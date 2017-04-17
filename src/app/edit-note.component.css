@@ -2,3 +2,15 @@ textarea {
     width:1000px;
     height: 400px;
 }
+
+.errorMessage {
+  color:red;
+}
+
+.savePanel {
+  margin-bottom: 5px;
+}
+
+.saveButton {
+  margin-right: 10px;
+}

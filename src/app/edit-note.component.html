@@ -1,5 +1,15 @@
 <div>
-    <button (click)="reload()">reload</button>
-    <br/>
-    <textarea autofocus [(ngModel)]="note.text" (ngModelChange) = "onNoteChange($event)"></textarea>
+  <!--<p-editor [(ngModel)]="note.text" [style]="{'height':'320px'}"></p-editor>-->
+  <div class="savePanel">
+    <button class="saveButton" pButton (click)="saveNote()" label="Save"></button>
+    <span [hidden]="!noteSaved">saved</span>
+    <span class="errorMessage" [hidden]="!showSaveErrorMessage">not saved - error occured</span>
+  </div>
+  <textarea autofocus [(ngModel)]="noteText" (ngModelChange) = "onNoteChange($event)"></textarea>
+  <p-dialog header="Password" [(visible)]="showPasswordDialog" modal="modal" width="300" responsive="true">
+    <p class="errorMessage" [hidden]="!showWrongPasswordMessage">Wrong password</p>
+    <p>Please enter the password to decrypt your note</p>
+    <input type="password" [(ngModel)]="password"/>
+    <button pButton type="button" (click)="enterPassword()" label="ok" [disabled] = "password == ''"></button>
+  </p-dialog>
 </div>

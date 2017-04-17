@@ -31,7 +31,7 @@ export class NoteService {
         return this.http
             .post(this.serviceUrl + "/", JSON.stringify(note), {headers: this.headers})
             .toPromise()
-            .then(res => res.json().data as Note)
+            .then(res => res.json() as Note)
             .catch(this.handleError);
     }
 

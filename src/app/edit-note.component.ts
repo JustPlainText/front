@@ -1,78 +1,116 @@
 import 'rxjs/add/operator/switchMap';
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Title }     from '@angular/platform-browser';
-import {Observable} from 'rxjs/Rx';
 import * as CryptoJS from 'crypto-js';
 
 import {Note} from './note';
 import {NoteService} from './note.service';
+import {PasswordService} from './password.service';
 import {SimpleTimer} from 'ng2-simple-timer';
 
 @Component ({
-    selector: 'edit-note',
-    templateUrl: './edit-note.component.html',
-    styleUrls: ['./edit-note.component.css']
+  selector: 'edit-note',
+  templateUrl: './edit-note.component.html',
+  styleUrls: ['./edit-note.component.css']
 })
 
-export class EditNoteComponent implements OnInit {
-    note: Note;
-    noteChanged: boolean;
+export class EditNoteComponent implements AfterViewInit {
+  note: Note = new Note();
+  noteText: string = "";
+  noteChanged: boolean;
+  noteSaved: boolean;
+  password: string;
+  showSaveErrorMessage: boolean;
+  showWrongPasswordMessage: boolean;
+  showPasswordDialog: boolean;
 
-    public constructor(
-        private titleService: Title,
-        private route: ActivatedRoute,
-        private noteService: NoteService,
-        private timer: SimpleTimer
-    ) { }
+  public constructor(
+    private titleService: Title,
+    private route: ActivatedRoute,
+    private noteService: NoteService,
+    private passwordService: PasswordService,
+    private timer: SimpleTimer
+  ) { }
 
-    ngOnInit(): void {
-      this.note = new Note("", "", "");
-      this.route.params
-            .switchMap((params: Params) => this.noteService.getNote(params['id']))
-            .subscribe(note => {
-                this.note = note;
-                if (this.note) {
-                  this.setTitle(this.note.title)
-                }
-                else {
-                  this.note = new Note("", "", "");
-                }
-            });
-      this.timer.newTimer("saveCronJob", 5);
-      this.timer.subscribe("saveCronJob", e => this.saveNote());
+  ngAfterViewInit(): void {
+    this.route.params
+          .switchMap((params: Params) => this.noteService.getNote(params['id']))
+          .subscribe(note => {
+            this.note = note;
+            this.noteText = this.note.text;
+            this.setTitle(this.note.title);
+            this.checkNotePassword();
+          });
+    this.startSaveCronJob();
+  }
+
+  public startSaveCronJob() {
+    this.timer.newTimer("saveCronJob", 5);
+    this.timer.subscribe("saveCronJob", e => this.saveNote());
+  }
+
+  public setTitle(title: string) {
+    this.titleService.setTitle(title);
+  }
+
+  public onNoteChange() {
+    this.noteChanged = true;
+    this.noteSaved = false;
+  }
+
+  public enterPassword() {
+    this.noteText = this.decrypt();
+    if (!this.noteText) {
+      this.showWrongPasswordMessage = true;
     }
-
-    public setTitle(title: string) {
-        this.titleService.setTitle(title);
+    else {
+      this.showPasswordDialog = false;
+      this.showWrongPasswordMessage = false;
     }
+  }
 
-    public onNoteChange() {
-        this.noteChanged = true;
-    }
-
-    //TODO change from array to single note after introducing the real backend
-    public reload() {
-        this.noteService.getNote(this.note.id).then(notes => this.note = notes);
+  private checkNotePassword() {
+    if (this.note.password) {
+      if (this.passwordService.password) {
+        this.password = this.passwordService.password;
       }
-
-    private saveNote() {
-        if (this.noteChanged) {
-          console.log("save "  + this.note.id);
-            this.noteService.update(this.note);
-        }
-        this.noteChanged = false;
+      else {
+        this.showPasswordDialog = true;
+      }
     }
+  }
 
-
-/*
-    public encrypt(value) {
-        var encrypted = CryptoJS.AES.encrypt(this.note.text, this.note.id);
-        console.log(encrypted.toString());
-
-        var decrypted = CryptoJS.AES.decrypt(encrypted, this.note.id);
-        console.log(decrypted.toString(CryptoJS.enc.Utf8));
+  public saveNote() {
+    if (this.noteChanged) {
+      console.log("save "  + this.note.id);
+      this.note.text = this.password ? this.encrypt() : this.noteText;
+      this.noteService.update(this.note).then(
+        (note) => {
+          this.noteSaved = true;
+          this.showSaveErrorMessage = false;
+      }, (error) => {
+        this.showSaveErrorMessage = true;
+      });
     }
-    */
+    this.noteChanged = false;
+  }
+
+  private encrypt(): string {
+    let encryptedText = CryptoJS.AES.encrypt(this.noteText, this.password).toString();
+    return encryptedText;
+  }
+
+  private decrypt() {
+    let decryptedText;
+    try {
+      decryptedText = CryptoJS.AES.decrypt(this.note.text, this.password)
+        .toString(CryptoJS.enc.Utf8);
+    }
+    catch(e) {
+      decryptedText = "";
+    }
+    return decryptedText;
+  }
 
 }

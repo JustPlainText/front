@@ -1,4 +1,8 @@
 <div>
-    <input type="text" [(ngModel)]="noteTitle"/>
-    <button (click)="createNewNote()">create</button>
+    <input type="text" placeholder="Title" [(ngModel)]="note.title"/>
+    <input type="password" placeholder="Password (optional)" [(ngModel)]="password"/>
+    <button pButton type="button" (click)="createNewNote()" label="create" [disabled] = "note.title == ''"></button>
+
+    <div [ngBusy]="{busy: busy, message: 'Loading...', delay: 300}"></div>
 </div>
+
