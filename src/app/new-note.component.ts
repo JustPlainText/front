@@ -32,7 +32,7 @@ export class NewNoteComponent {
     this.note.id = id;
     this.busy = this.noteService.create(this.note).then(note =>
       {
-        let link = ['/edit', this.note.title, id];
+        let link = ['/edit', id];
         this.router.navigate(link);
       });
   }
