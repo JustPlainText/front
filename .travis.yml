@@ -21,6 +21,9 @@ before_script:
 - npm install -g @angular/cli
 - npm install
 - ng build
+cache:
+  directories:
+    - "$HOME/google-cloud-sdk/"
 script:
 - ng test --watch false
 after_success:
@@ -28,4 +31,10 @@ after_success:
 - docker build -t jptttttt/front:$VERSION .
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - docker push jptttttt/front:$VERSION;
-#deploy:
+- docker tag jptttttt/front:$VERSION jptttttt/front:latest
+deploy:
+  - gcloud version || true
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+  # Add gcloud to $PATH
+  - source /home/travis/google-cloud-sdk/path.bash.inc
+  - gcloud version
