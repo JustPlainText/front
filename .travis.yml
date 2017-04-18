@@ -40,7 +40,8 @@ after_success:
 - gcloud version
 - openssl enc -aes-256-cbc -pass pass:$G_DEPLOYER_ENC_PASS -p -in secure/jpt-deployer-key.enc -out secure/jpt-deployer-key.json -base64 -d
 - gcloud auth activate-service-account --key-file secure/jpt-deployer-key.json
-- gcloud config set project "jpt-21"
+- gcloud config set project jpt-21
+- gcloud config set compute/zone us-central1-b
 - gcloud config list
 - gcloud components install kubectl
 - gcloud container clusters list
