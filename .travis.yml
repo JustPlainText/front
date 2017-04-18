@@ -38,11 +38,15 @@ after_success:
 # Add gcloud to $PATH
 - source /home/travis/google-cloud-sdk/path.bash.inc
 - gcloud version
-- gcloud config set project "jpt-21"
 - openssl enc -aes-256-cbc -pass pass:$G_DEPLOYER_ENC_PASS -p -in secure/jpt-deployer-key.enc -out secure/jpt-deployer-key.json -base64 -d
 - gcloud auth activate-service-account --key-file secure/jpt-deployer-key.json
+- gcloud config set project "jpt-21"
 - gcloud components install kubectl
+- gcloud container clusters list
+- gcloud compute instances list
+- gcloud container get-server-config
 - kubectl config get-contexts
+- kubectl get pods
 
 
 #deploy:
