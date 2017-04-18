@@ -29,9 +29,9 @@ script:
 after_success:
 - cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 - docker build -t jptttttt/front:$VERSION .
+- docker tag jptttttt/front:$VERSION jptttttt/front:latest
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - docker push jptttttt/front:$VERSION
-- docker tag jptttttt/front:$VERSION jptttttt/front:latest
 # gloud part
 - gcloud version || true
 - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
@@ -44,11 +44,12 @@ after_success:
 - gcloud config set compute/zone us-central1-b
 - gcloud config list
 - gcloud components install kubectl
+- gcloud container clusters get-credentials jpt
 - gcloud container clusters list
 - gcloud compute instances list
 - gcloud container get-server-config
 - kubectl config get-contexts
 - kubectl get pods
-
+- kubectl set image deployment/front front=jptttttt/front:$VERSION
 
 #deploy:
