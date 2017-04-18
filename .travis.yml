@@ -28,28 +28,33 @@ script:
 - ng test --watch false
 after_success:
 - cat ./coverage/*/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+# create docker image with new tag (neue Version, weil sonst (nur mit latest) der k8s deployment update nicht funktioniert)
 - docker build -t jptttttt/front:$VERSION .
+# tag 'latest' auf die neue Version setzen. Einfach so, hat bis jetzt keine Relevanz bei uns
 - docker tag jptttttt/front:$VERSION jptttttt/front:latest
+# bei docker hub einlogen. Zugangsdaten werden als Envs im Travis Projekt-Settings abgelegt
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+# image pushen
 - docker push jptttttt/front:$VERSION
-# gloud part
+- docker push jptttttt/front:latest
+## gloud part
 - gcloud version || true
+# wenn gcloud noch nicht installiert ist - dann das machen https://goo.gl/JMcBBk
 - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
 # Add gcloud to $PATH
-- source /home/travis/google-cloud-sdk/path.bash.inc
+- source $HOME/google-cloud-sdk/path.bash.inc
 - gcloud version
+# key file for gcloud login entschluesseln, pass wird ebenfalls aus der Travis Envs geholt
 - openssl enc -aes-256-cbc -pass pass:$G_DEPLOYER_ENC_PASS -p -in secure/jpt-deployer-key.enc -out secure/jpt-deployer-key.json -base64 -d
+# gcloud login and set cluster & project data
 - gcloud auth activate-service-account --key-file secure/jpt-deployer-key.json
 - gcloud config set project jpt-21
 - gcloud config set compute/zone us-central1-b
-- gcloud config list
+# install kubectl
 - gcloud components install kubectl
+# set kubectl context & cluster
 - gcloud container clusters get-credentials jpt
-- gcloud container clusters list
-- gcloud compute instances list
-- gcloud container get-server-config
-- kubectl config get-contexts
-- kubectl get pods
+# update cluster mit dem neuen image
 - kubectl set image deployment/front front=jptttttt/front:$VERSION
 
 #deploy:
