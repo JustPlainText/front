@@ -20,7 +20,7 @@ before_install:
 before_script:
 - npm install -g @angular/cli
 - npm install
-- ng build
+- ng build --prod --aot
 cache:
   directories:
     - "$HOME/google-cloud-sdk/"

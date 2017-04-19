@@ -1,5 +1,5 @@
 import 'rxjs/add/operator/switchMap';
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Title }     from '@angular/platform-browser';
 import * as CryptoJS from 'crypto-js';
@@ -54,7 +54,7 @@ export class EditNoteComponent implements AfterViewInit {
     this.titleService.setTitle(title);
   }
 
-  public onNoteChange() {
+  public onNoteChange(changes: SimpleChanges) {
     this.noteChanged = true;
     this.noteSaved = false;
   }
