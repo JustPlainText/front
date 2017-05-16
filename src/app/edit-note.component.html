@@ -4,7 +4,7 @@
     <button class="saveButton" pButton (click)="saveNote()" [disabled]="noteSaved" label="{{noteSaved ? 'Saved' : 'Save'}}"></button>
     <span class="errorMessage" [hidden]="!showSaveErrorMessage">not saved - error occured</span>
   </div>
-  <textarea autofocus [(ngModel)]="noteText" (ngModelChange)="onNoteChange($event)"></textarea>
+  <textarea autofocus [(ngModel)]="noteText" (ngModelChange)="onNoteChange($event)" [disabled]="showPasswordDialog"></textarea>
   <p-dialog header="Password" [(visible)]="showPasswordDialog" modal="modal" width="400" responsive="true">
     <p class="errorMessage" [hidden]="!showWrongPasswordMessage">Wrong password</p>
     <p>Please enter the password to decrypt your note</p>
